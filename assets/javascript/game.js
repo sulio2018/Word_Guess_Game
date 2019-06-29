@@ -34,8 +34,7 @@ document.onkeyup = function (event) {
     var userGuess = event.key;
 
     //Set up logic of the game
-    if (userGuess === )
-
+   
 
 
     //Update game with the guess
@@ -47,7 +46,7 @@ document.onkeyup = function (event) {
     }
 
     //Set up displays
-    directionsText.textContent = "Press any key to start playing!";
+    directionsText.textContent = "Press letter key to start playing!";
     winsText.textContent = "Wins: " + wins;
     currentWord.textContent = randomCountry;
     remainingGuesses.textContent = "Remaining Guesses: " + guessArray;
