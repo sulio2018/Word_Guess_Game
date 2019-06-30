@@ -1,0 +1,19 @@
+html {
+    background: url(../images/earth.jpg) no-repeat center center fixed ;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.container {
+    text-align: center;
+    color: aliceblue;
+    font-size: 30px 
+}
+
+h2 {
+    font-size: 50px;
+    padding-bottom: 50px;
+    margin-top: 20px;   
+}

@@ -74,7 +74,7 @@ function fullRoundGame() {
 
     if (currentLetters.toString() == answerArray.toString()) {
         wins++;
-        alert("CONTRATULATIONS! You guessed '" + currentWord + "' correctly. Try another country?");
+        alert("CONTRATULATIONS! You guessed '" + currentWord + "' correctly. Try another word?");
         document.getElementById("wins-text").innerHTML = "Wins: " + " " + wins;
 
         //Start New Game
