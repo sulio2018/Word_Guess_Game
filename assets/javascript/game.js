@@ -1,110 +1,105 @@
-var countryList = ["andorra", "azerbaijan", "bahrain", "bhutan", "botswana", "chad", "comoros", "djibouti", "dominica", "eritrea", "eswatini", "gabon", "latvia", "madagascar", "moldova", "rwanda", "singapore", "suriname", "tanzania", "zambia"]
+var keywordList = ["atmosphere", "biodiversity", "bioenergy", "biofuels", "conservation", "deforestation", "ecosystem", "emissions", "hanitat", "organic", "pesticides", "recycle", "reforestation", "reusable", "sustainability"]
 
-//Create variables to hold references in the HTML
-var directionsText = document.getElementById("directions-text");
-var winsText = document.getElementById("wins-text");
-var currentWord = document.getElementById("current-word");
-var remainingGuesses = document.getElementById("remaining-guesses");
-var lettersGuessed = document.getElementById("letters-guessed");
+//Create variables
+var currentWord = "";
+var currentLetters = [];
+var blankSpaces = 0;
+var answerArray = [];
+var wrongGuesses = [];
+var maxTries = 10;
+var wins = 0;
+var losses = 0;
 
+//Game setup
+function startGame() {
 
-//Set up variables
-const maxTries = 10
+    currentWord = keywordList[Math.floor(Math.random() * keywordList.length)];
 
-var guessedLetters = []
-var guessedWord = []
-var currentWord
-var remainingGuesses
-var pauseGame = false
-var wins = 0
+    currentLetters = currentWord.split("");
 
-resetGame()
+    blankSpaces = currentLetters.length;
 
-//Set up key function
-document.onkeypress = function (event) {
+    //Reset the game
+    maxTries = 10;
+    wrongGuesses = [];
+    answerArray = [];
 
-    if (isAlpha(event.key) && !pauseGame) {
-        checkForLetter(event.key.toUpperCase())
+    //Fill in spaces with underscores
+    for (i = 0; i < blankSpaces; i++) {
+        answerArray.push("_");
     }
+
+    //Setup display
+    document.getElementById("wins-text").innerHTML = "Wins: " + " " + wins;
+    document.getElementById("losses-text").innerHTML = "Losses: " + " " + losses;
+    document.getElementById("current-word").innerHTML = answerArray.join(" ");
+    document.getElementById("remaining-guesses").innerHTML = "Number of Guesses Remaining: " + " " + maxTries;
+
 }
 
-function checkForLetter(letter) {
-    var foundLetter = false
+//Reference guesses
+function checkLetters(letter) {
 
-//Check for correctt/incorrect guesses
-    for (var i = 0, j = currentWord.length; i < j; i++) {
-        if (letter === currentWord[i]) {
-            guessedWord[i] = letter
-            foundLetter = true
+    if (event.keyCode >= 65 && event.keyCode <= 90) {
 
-            if (guessedWord.join("") === currentWord) {
-                wins++
-                pauseGame = true
-                updateDisplay()
-                setTimeout(resetGame, 5000)
+        var correctLetter = false;
+
+        for (var i = 0; i < blankSpaces; i++) {
+            if (currentWord[i] == letter) {
+                correctLetter = true;
             }
         }
-    }
 
-    if (!foundLetter) {
-            if (!guessedLetters.includes(letter)) {
-            guessedLetters.push(letter)
-            remainingGuesses--
+        if (correctLetter) {
+            for (var i = 0; i < blankSpaces; i++) {
+                if (currentWord[i] == letter) {
+                    answerArray[i] = letter;
+                }
+            }
         }
-        if (remainingGuesses === 0) {
-            guessedWord = currentWord.split()
-            pauseGame = true
-            setTimeout(resetGame, 5000)
-        }
-    }
 
-    updateDisplay()
-
-}
-
-
-function resetGame() {
-    numGuess = maxGuess
-    pauseGame = false
-
-    // Get a new word
-    wordToMatch = possibleWords[Math.floor(Math.random() * possibleWords.length)].toUpperCase()
-    console.log(wordToMatch)
-
-    // Reset word arrays
-    guessedLetters = []
-    guessingWord = []
-
-    // Reset the guessed word
-    for (var i = 0, j = wordToMatch.length; i < j; i++) {
-        // Put a space instead of an underscore between multi word "words"
-        if (wordToMatch[i] === " ") {
-            guessingWord.push(" ")
-        } else {
-            guessingWord.push("_")
+        else {
+            wrongGuesses.push(letter);
+            maxTries--;
         }
     }
-
-    // Update the Display
-    updateDisplay()
 }
 
-function updateDisplay() {
-    document.getElementById("totalWins").innerText = wins
-    document.getElementById("currentWord").innerText = guessingWord.join("")
-    document.getElementById("remainingGuesses").innerText = numGuess
-    document.getElementById("guessedLetters").innerText = guessedLetters.join(" ")
+//Update a full round of a game
+function fullRoundGame() {
+
+    document.getElementById("remaining-guesses").innerHTML = "Number of Guesses Remaining: " + " " + maxTries;
+    document.getElementById("current-word").innerHTML = answerArray.join(" ");
+    document.getElementById("letters-guessed").innerHTML = "Letters Already Guessed:" + " " + wrongGuesses.join(" ");
+
+    if (currentLetters.toString() == answerArray.toString()) {
+        wins++;
+        alert("CONTRATULATIONS! You guessed '" + currentWord + "' correctly. Try another country?");
+        document.getElementById("wins-text").innerHTML = "Wins: " + " " + wins;
+
+        //Start New Game
+        startGame();
+        document.getElementById("letters-guessed").innerHTML = "Letters Already Guessed:" + " " + " ";
+
+    } else if (maxTries == 0) {
+        losses++;
+        alert("You have 0 guesses left. The correct word was '" + currentWord + "'. Do you want to try again?");
+        document.getElementById("losses-text").innerHTML = "Losses: " + " " + losses;
+
+        //Start New Game
+        startGame();
+        document.getElementById("letters-guessed").innerHTML = "Letters Already Guessed:" + " " + " ";
+    }
 }
-})
 
-//Set up displays
-directionsText.textContent = "Press letter key to start playing!";
-winsText.textContent = "Wins: " + wins;
-currentWord.textContent = randomCountry;
-remainingGuesses.textContent = "Remaining Guesses: " + guessArray;
-lettersGuessed.textContent = lettersGuessed;
+//Start game for the first time
+startGame();
+
+document.onkeyup = function(event) {
+
+    var lettersGuessed = String.fromCharCode(event.keyCode).toLowerCase();
+
+    checkLetters(lettersGuessed);
+    fullRoundGame();
 
 }
-
-
-
