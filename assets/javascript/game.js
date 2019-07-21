@@ -98,6 +98,8 @@ startGame();
 
 document.onkeyup = function(event) {
 
+    prompt("Type a letter");
+
     var lettersGuessed = String.fromCharCode(event.keyCode).toLowerCase();
 
     checkLetters(lettersGuessed);
